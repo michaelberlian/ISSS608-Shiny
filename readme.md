@@ -93,3 +93,12 @@ Similar with Nowcast page this page consist of 3 part:
     In this table we could also see the parameter that was chosen the best for the arima model and the ets model. In the model description can be seen the first bracket of arima is pdq notation followed by PDQ and seasonal period. While for the ETS, each character represent error, trend, and seasonality respectively (m = multiplicative, n = none, a = additive). 
 
 3. the last part is the plot showing the prediction for the next 6 months for GDP dataset or 3 months for the other dataset.
+
+
+# External Links & References
+- [Shiny GitHub](https://github.com/michaelberlian/ISSS608-Shiny)
+- [Shiny App](https://michael-berlian.shinyapps.io/Project/)
+- [Project Website](https://nowcasting-economic-sg.netlify.app)
+- [Project Website GitHub](https://github.com/AlexeiJason/ISSS608-Project)
+- [TimeTK](https://business-science.github.io/timetk/)
+- [Modeltime](https://business-science.github.io/modeltime/)
