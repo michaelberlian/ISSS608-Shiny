@@ -31,7 +31,8 @@ gdp <- gdp %>%
   ) 
 gdp$DATE = as.Date(paste0(gdp$quarter,gdp$year), format = '%d/%m/%Y')
 gdp <- gdp %>%
-  arrange(DATE)
+  arrange(DATE) %>%
+  select(-c("year","quarter"))
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -369,7 +370,7 @@ server <- function(input, output) {
               width = width,
               numericInput(
                 "nsa",
-                "Non Seasonal AR:",
+                "Non Seasonal AR(p):",
                 value = 3
               )
             ),
@@ -377,7 +378,7 @@ server <- function(input, output) {
               width = width,
               numericInput(
                 "nsd",
-                "Non Seasonal Differences:",
+                "Non Seasonal Differences(d):",
                 value = 1
               )
             ),
@@ -385,7 +386,7 @@ server <- function(input, output) {
               width = width,
               numericInput(
                 "nsm",
-                "Non Seasonal MA:",
+                "Non Seasonal MA(q):",
                 value = 3
               )
             ),
@@ -403,7 +404,7 @@ server <- function(input, output) {
               width = width,
               numericInput(
                 "sa",
-                "Seasonal AR:",
+                "Seasonal AR(P):",
                 value = 1
               )
             ),
@@ -411,7 +412,7 @@ server <- function(input, output) {
               width = width,
               numericInput(
                 "sd",
-                "Seasonal Differences:",
+                "Seasonal Differences(D):",
                 value = 0
               )
             ),
@@ -419,7 +420,7 @@ server <- function(input, output) {
               width = width,
               numericInput(
                 "sm",
-                "Seasonal MA:",
+                "Seasonal MA(Q):",
                 value = 1
               )
             ),
@@ -556,6 +557,7 @@ server <- function(input, output) {
             actual_data = plot_data
           ) %>%
           plot_modeltime_forecast(
+            .title = "Model Nowcast Validation",
             .interactive = FALSE
           ) 
       })
@@ -575,6 +577,7 @@ server <- function(input, output) {
         p <- refit_tbl %>%
           modeltime_forecast(h = assess, actual_data = plot_data) %>%
           plot_modeltime_forecast(
+            .title = "Model Nowcast",
             .interactive      = FALSE
           )
         p
