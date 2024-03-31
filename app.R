@@ -89,10 +89,24 @@ ui <- fluidPage(
             sidebarLayout(
               sidebarPanel(
                 fluidRow(
-                  selectInput(
-                    "method",
-                    "Method:",
-                    choices = c("ETS", "Arima", "Prophet")),
+                  column(
+                    width = 6,
+                    selectInput(
+                      "method",
+                      "Method:",
+                      choices = c("ETS", "Arima", "Prophet"))
+                  ),
+                  column(
+                    width = 6,
+                    sliderInput(
+                      'cin',
+                      "Confidence Interval:",
+                      value = 0.95,
+                      min = 0,
+                      max = 1,
+                      step = 0.01
+                    )
+                  )
                 ),
                 uiOutput(
                   "parameters"
@@ -124,6 +138,14 @@ ui <- fluidPage(
           ),
           tabPanel(
             "Auto Nowcast",
+            sliderInput(
+              'cia',
+              "Confidence Interval:",
+              value = 0.95,
+              min = 0,
+              max = 1,
+              step = 0.01
+            ),
             plotOutput(
               "validation",
               height = "300px",
@@ -272,6 +294,8 @@ server <- function(input, output) {
         calibration_tbl <- models_tbl %>%
           modeltime_calibrate(new_data = testing(splits))
         
+        conf_interval = input$cia
+        
         output$validation <- renderPlot({
           
           plot_data <- output_data %>% 
@@ -282,7 +306,8 @@ server <- function(input, output) {
           calibration_tbl %>%
             modeltime_forecast(
               new_data    = testing(splits),
-              actual_data = plot_data
+              actual_data = plot_data,
+              conf_interval = conf_interval,
             ) %>%
             plot_modeltime_forecast(
               .title = "Model Nowcast Validation",
@@ -306,7 +331,7 @@ server <- function(input, output) {
             )
 
           refit_tbl %>%
-            modeltime_forecast(h = assess, actual_data = plot_data) %>%
+            modeltime_forecast(h = assess, actual_data = plot_data, conf_interval = conf_interval) %>%
             plot_modeltime_forecast(
               .title = "Model Nowcast",
               .interactive      = FALSE
@@ -503,10 +528,14 @@ server <- function(input, output) {
         assess = assess,
         cumulative = TRUE
       )
-      
+      if (input$period == 0 ){
+        seasonal_period = "auto"
+      } else {
+        seasonal_period = input$period
+      }
       if (input$method == "ETS"){
         model <- exp_smoothing(
-          seasonal_period = input$period,
+          seasonal_period = seasonal_period,
           error = input$error,
           trend = input$trend,
           season = input$season,
@@ -516,7 +545,7 @@ server <- function(input, output) {
           fit(VALUE ~ DATE, training(splits))
       } else if (input$method == "Arima"){
         model <- arima_reg(
-          seasonal_period = input$period,
+          seasonal_period = seasonal_period,
           non_seasonal_ar = input$nsa,
           non_seasonal_differences = input$nsd,
           non_seasonal_ma = input$nsm,
@@ -550,11 +579,14 @@ server <- function(input, output) {
           DATE > '2020-01-01'
         )
       
+      conf_interval = input$cin
+      
       output$v_nowcast <- renderPlot({
         calibration_tbl %>%
           modeltime_forecast(
             new_data    = testing(splits),
-            actual_data = plot_data
+            actual_data = plot_data,
+            conf_interval = conf_interval,
           ) %>%
           plot_modeltime_forecast(
             .title = "Model Nowcast Validation",
@@ -575,7 +607,7 @@ server <- function(input, output) {
       output$nowcast <- renderPlot({
         
         p <- refit_tbl %>%
-          modeltime_forecast(h = assess, actual_data = plot_data) %>%
+          modeltime_forecast(h = assess, actual_data = plot_data, conf_interval = conf_interval) %>%
           plot_modeltime_forecast(
             .title = "Model Nowcast",
             .interactive      = FALSE

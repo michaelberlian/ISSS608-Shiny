@@ -5,7 +5,7 @@ account: michael-berlian
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11580695
-bundleId:
+bundleId: 8437343
 url: https://michael-berlian.shinyapps.io/Project/
 version: 1
 asMultiple: FALSE
