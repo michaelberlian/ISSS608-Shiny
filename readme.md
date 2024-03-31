@@ -1,4 +1,4 @@
-# NOWCASTING STATE OF ECONOMIC IN SINGAPORE
+# NOWCASTING STATE OF ECONOMIC IN SINGAPORE - User Guide
 
 The application consist of 4 pages:
 - Historical 
@@ -96,8 +96,8 @@ Similar with Nowcast page this page consist of 3 part:
 
 
 # External Links & References
-- [Shiny GitHub](https://github.com/michaelberlian/ISSS608-Shiny)
-- [Shiny App](https://michael-berlian.shinyapps.io/Project/)
+- [Shiny Application GitHub](https://github.com/michaelberlian/ISSS608-Shiny)
+- [Shiny Application](https://michael-berlian.shinyapps.io/Project/)
 - [Project Website](https://nowcasting-economic-sg.netlify.app)
 - [Project Website GitHub](https://github.com/AlexeiJason/ISSS608-Project)
 - [TimeTK](https://business-science.github.io/timetk/)
